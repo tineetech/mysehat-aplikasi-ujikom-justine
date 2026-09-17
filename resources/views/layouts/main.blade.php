@@ -29,9 +29,8 @@
 
         <div class="flex gap-3 text-gray-400 ">
             <a href="/" class="{{ request()->routeIs('home') ? ' text-black' : '' }}">Home</a>
-            <a href="/">Tentang Kami</a>
-            <a href="/">Galery</a>
-            <a href="/">Kontak Kami</a>
+            <a href="/produk" class="{{ request()->routeIs('produk') ? ' text-black' : '' }}">Produk</a>
+            <a href="/galery" class="{{ request()->routeIs('galery') ? ' text-black' : '' }}">Galery</a>
         </div>
 
         <div>

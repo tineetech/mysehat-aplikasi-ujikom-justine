@@ -1,42 +1,26 @@
 <?php
 
-namespace App\Filament\Resources\Pasiens\Tables;
+namespace App\Filament\Resources\Galeries\Tables;
 
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
+use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
-class PasiensTable
+class GaleriesTable
 {
     public static function configure(Table $table): Table
     {
         return $table
             ->columns([
-                TextColumn::make('nik')
-                    ->searchable(),
+                ImageColumn::make('file_path'),
                 TextColumn::make('nama')
                     ->searchable(),
-                TextColumn::make('dokter.poli.nama')
-                    ->sortable(),
-                TextColumn::make('dokter.nama')
-                        ->sortable(),
-                TextColumn::make('tanggal_lahir')
-                    ->date()
-                    ->sortable(),
-                TextColumn::make('jenis_kelamin')
-                    ->badge(),
-                TextColumn::make('phone')
-                    ->numeric()
-                    ->sortable(),
                 TextColumn::make('status')
-                    ->badge()
-                    ->color(fn (string $state): string => match ($state) {
-                        'active' => 'success',
-                        'non-active' => 'danger',
-                    }),
+                    ->badge(),
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -51,7 +35,7 @@ class PasiensTable
             ])
             ->recordActions([
                 EditAction::make(),
-                DeleteAction::make()
+                DeleteAction::make(),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
