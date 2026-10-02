@@ -13,12 +13,15 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use UnitEnum;
 
 class ProdukResource extends Resource
 {
     protected static ?string $model = Produk::class;
 
-    protected static ?int $navigationSort = 4;
+    protected static UnitEnum|string|null $navigationGroup = 'Produk';
+
+    protected static ?int $navigationSort = 1;
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
 
     protected static ?string $recordTitleAttribute = 'Produk';

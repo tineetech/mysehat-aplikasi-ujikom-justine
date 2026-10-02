@@ -6,6 +6,7 @@ use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Schema;
+use Illuminate\Database\Eloquent\Model;
 
 class PasienForm
 {
@@ -18,7 +19,8 @@ class PasienForm
                 TextInput::make('nama')
                     ->required(),
                 Select::make('dokter_id')
-                    ->relationship('dokter', 'nama')
+                    ->relationship('dokter', 'nama', modifyQueryUsing: fn ($query) => $query->with('poli'))
+                    ->getOptionLabelFromRecordUsing(fn (Model $record): string => "{$record->nama} — " . ($record->poli?->nama ?? '-'))
                     ->searchable()
                     ->preload()
                     ->default(null),

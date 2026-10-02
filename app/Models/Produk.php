@@ -12,4 +12,8 @@ class Produk extends Model
     protected $table = 'produks';
     
     protected $guarded = [];
+
+    public function assignItems() {
+        return $this->hasMany(ProdukAssignItem::class);
+    }
 }

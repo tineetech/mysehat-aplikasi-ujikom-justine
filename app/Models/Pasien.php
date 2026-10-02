@@ -16,4 +16,8 @@ class Pasien extends Model
     public function dokter() {
         return $this->belongsTo(Dokter::class);
     }
+
+    public function produkAssigns() {
+        return $this->hasMany(ProdukAssign::class);
+    }
 }
