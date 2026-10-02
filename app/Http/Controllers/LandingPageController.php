@@ -12,11 +12,11 @@ class LandingPageController extends Controller
         return view('pages.home');
     }
     public function indexProduk() {
-        $produk = Produk::all();
+        $produk = Produk::where('status', 'active')->orderBy('created_at', 'desc')->paginate(8);
         return view('pages.produk', compact('produk'));
         }
     public function indexGalery() {
-        $galery = Galery::all();
+        $galery = Galery::where('status', 'active')->orderBy('created_at', 'desc')->get();
         return view('pages.galery', compact('galery'));
     }
 }

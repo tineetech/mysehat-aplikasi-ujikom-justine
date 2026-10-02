@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Produk — MySehat</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = { theme: { extend: {
+  fontFamily: { sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'] },
+  colors: { brand: { DEFAULT: '#0f766e', dark: '#0b5c56', light: '#5eead4' } }
+}}};
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/js/all.min.js" defer crossorigin="anonymous"></script>
+<style>
+:root { box-sizing: border-box; padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); --bg1:#e6f7f4; --bg2:#c9ece6; --ink:#1f2b2a; --muted:#5b6d6b; --card:#ffffff; --line:#e3efed; }
+:root[data-theme="dark"] { --bg1:#0c1f1e; --bg2:#0f2e2b; --ink:#e8f5f3; --muted:#9bb5b1; --card:#132a28; --line:#1f3d3a; }
+html { scroll-behavior: smooth; scroll-padding-top: 90px; }
+body { font-family: 'Plus Jakarta Sans', system-ui, sans-serif; color: var(--ink); background: linear-gradient(180deg, var(--bg2) 0%, var(--bg1) 45%, var(--bg1) 100%); min-height: 100vh; }
+.card { background: var(--card); border: 1px solid var(--line); }
+.muted { color: var(--muted); }
+.stripes { background-image: repeating-linear-gradient(90deg, rgba(255,255,255,.28) 0 2px, transparent 2px 90px); }
+:root[data-theme="dark"] .stripes { background-image: none; }
+.orbs { display: none; }
+:root[data-theme="dark"] .orbs { display: block; }
+.orb { position: fixed; border-radius: 9999px; background: rgba(94,234,212,.07); border: 1px solid rgba(94,234,212,.18); }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; scroll-behavior: auto !important; } }
+:focus-visible { outline: 2px solid #0f766e; outline-offset: 2px; }
+</style>
+</head>
+<body>
+<div class="stripes fixed inset-0 pointer-events-none" aria-hidden="true"></div>
+<div class="orbs pointer-events-none" aria-hidden="true">
+  <span class="orb" style="width:280px;height:280px;top:-70px;right:-60px"></span>
+  <span class="orb" style="width:150px;height:150px;top:46%;left:-40px"></span>
+  <span class="orb" style="width:90px;height:90px;bottom:12%;right:8%"></span>
+</div>
+
+<header class="relative z-20 px-4 pt-4">
+  <nav class="card mx-auto max-w-6xl rounded-full flex items-center justify-between pl-6 pr-2 py-2 shadow-sm">
+    <a href="mysehat.html" class="flex items-center gap-2 font-extrabold text-xl text-brand"><i class="fa-solid fa-heart-pulse text-2xl"></i>MySehat</a>
+    <ul class="hidden md:flex items-center gap-8 text-sm font-medium">
+      <li><a href="mysehat.html" class="muted hover:text-brand">Beranda</a></li>
+      <li><a href="produk.html" aria-current="page" class="flex items-center gap-2 text-brand"><span class="w-1.5 h-1.5 rounded-full bg-brand"></span>Produk</a></li>
+      <li><a href="mysehat.html#galeri" class="muted hover:text-brand">Galeri</a></li>
+    </ul>
+    <div class="flex items-center gap-2">
+      <button id="themeBtn" aria-label="Ganti tema" class="w-9 h-9 rounded-full grid place-items-center hover:bg-black/5"><i class="fa-solid fa-moon"></i></button>
+      <a href="mysehat.html#kontak" class="hidden sm:inline-block card rounded-full px-5 py-2.5 text-sm font-semibold shadow-sm hover:shadow">Minta Demo</a>
+      <button id="menuBtn" aria-label="Buka menu" class="md:hidden w-9 h-9 rounded-full grid place-items-center hover:bg-black/5"><i class="fa-solid fa-bars"></i></button>
+    </div>
+  </nav>
+  <div id="mobileMenu" class="hidden md:hidden card mx-auto max-w-6xl rounded-3xl mt-2 p-4 text-sm font-medium space-y-3">
+    <a href="mysehat.html" class="block">Beranda</a><a href="produk.html" class="block">Produk</a><a href="mysehat.html#galeri" class="block">Galeri</a>
+  </div>
+</header>
+
+<main class="relative z-10 px-4 max-w-6xl mx-auto pt-12 md:pt-16 pb-20">
+  <span class="card inline-block rounded-full px-4 py-1.5 text-xs font-medium">Produk</span>
+  <h1 class="text-3xl md:text-5xl font-bold tracking-tight mt-5 leading-tight">Katalog obat &amp; alat pendukung</h1>
+  <p class="muted text-sm md:text-base mt-3 max-w-xl">Klik produk untuk memesan lewat WhatsApp.</p>
+
+  <div id="grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-10" aria-live="polite"></div>
+
+  <div class="mt-10 flex flex-col sm:flex-row items-center justify-between gap-4">
+    <p id="info" class="text-sm muted"></p>
+    <nav id="pager" aria-label="Pagination" class="flex items-center gap-1.5"></nav>
+  </div>
+</main>
+
+<footer class="relative z-10 text-center text-xs muted pb-8">©2026 MySehat</footer>
+
+<script>
+const WA = '6287774487198', PER = 8;
+const art = {
+  capsule: '<g transform="rotate(-30 60 45)"><rect x="22" y="32" width="76" height="26" rx="13" fill="#fff"/><path d="M60 32h25a13 13 0 010 26H60z" fill="#0f766e"/></g><circle cx="98" cy="70" r="6" fill="#5eead4"/>',
+  tablet: '<rect x="20" y="18" width="80" height="54" rx="8" fill="#fff"/><g fill="#5eead4"><circle cx="38" cy="36" r="7"/><circle cx="60" cy="36" r="7"/><circle cx="82" cy="36" r="7"/><circle cx="38" cy="55" r="7"/><circle cx="60" cy="55" r="7"/><circle cx="82" cy="55" r="7"/></g>',
+  pen: '<rect x="14" y="37" width="66" height="18" rx="7" fill="#fff"/><rect x="24" y="42" width="32" height="8" rx="3" fill="#5eead4"/><rect x="80" y="41" width="14" height="10" fill="#0f766e"/><path d="M94 46h16" stroke="#0f766e" stroke-width="2.5" stroke-linecap="round"/>',
+  bp: '<rect x="33" y="14" width="54" height="52" rx="12" fill="#fff"/><circle cx="60" cy="38" r="15" fill="#c8efe8" stroke="#0f766e" stroke-width="3"/><path d="M60 38l8-7" stroke="#0f766e" stroke-width="3" stroke-linecap="round"/><rect x="46" y="72" width="28" height="6" rx="3" fill="#0f766e"/>',
+  chair: '<circle cx="48" cy="58" r="19" fill="none" stroke="#fff" stroke-width="5"/><circle cx="48" cy="58" r="3" fill="#fff"/><path d="M48 58V22h11M48 40h30l9 18" fill="none" stroke="#0f766e" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="92" cy="66" r="6" fill="#0f766e"/>',
+  tank: '<rect x="42" y="24" width="36" height="56" rx="16" fill="#fff"/><rect x="42" y="44" width="36" height="14" fill="#5eead4"/><rect x="53" y="12" width="14" height="14" rx="3" fill="#0f766e"/><path d="M67 17h14" stroke="#0f766e" stroke-width="4" stroke-linecap="round"/>'
+};
+// [nama, tipe, harga, stok, ilustrasi]
+const P = [
+  ['Amoxicillin 500 mg','Obat',45000,120,'capsule'],['Paracetamol 500 mg','Obat',15000,300,'tablet'],['Insulin Pen','Obat',185000,45,'pen'],['Ibuprofen 400 mg','Obat',22000,210,'tablet'],
+  ['Cetirizine 10 mg','Obat',18000,160,'tablet'],['Omeprazole 20 mg','Obat',35000,95,'capsule'],['Vitamin C 1000 mg','Obat',40000,250,'tablet'],['Antasida Sirup','Obat',28000,80,'pen'],
+  ['Salbutamol Inhaler','Obat',65000,60,'pen'],['Metformin 500 mg','Obat',25000,140,'tablet'],['Amlodipine 5 mg','Obat',30000,175,'tablet'],['Cefixime 200 mg','Obat',55000,90,'capsule'],
+  ['Tensimeter Digital','Alat',350000,14,'bp'],['Kursi Roda','Alat',1250000,8,'chair'],['Tabung Oksigen','Alat',650000,20,'tank'],['Termometer Digital','Alat',85000,70,'bp'],
+  ['Oximeter Jari','Alat',175000,35,'bp'],['Nebulizer','Alat',450000,18,'bp'],['Tongkat Jalan','Alat',120000,25,'chair'],['Glukometer','Alat',280000,30,'bp'],
+  ['Masker Medis (50 pcs)','Alat',25000,400,'tank'],['Stetoskop','Alat',210000,22,'bp'],['Kruk Ketiak','Alat',190000,16,'chair'],['Regulator Oksigen','Alat',320000,12,'tank']
+].map(([name,type,price,stock,a], i) => ({name,type,price,stock,a,img:`https://picsum.photos/seed/mysehat-p${i+1}/600/450`}));
+
+const rp = n => 'Rp' + n.toLocaleString('id-ID');
+const grid = document.getElementById('grid'), pager = document.getElementById('pager'), info = document.getElementById('info');
+const pages = Math.ceil(P.length / PER);
+let page = Math.min(Math.max(parseInt((location.hash.match(/hal-(\d+)/) || [])[1]) || 1, 1), pages);
+
+function card(p) {
+  const url = `https://wa.me/${WA}?text=${encodeURIComponent('Halo, saya mau membeli produk ' + p.name + '.')}`;
+  return `<a href="${url}" target="_blank" rel="noopener" aria-label="Beli ${p.name} via WhatsApp" class="card rounded-3xl p-3 block hover:shadow-lg hover:-translate-y-0.5 transition">
+    <div class="relative aspect-[4/3] rounded-2xl grid place-items-center" style="background:linear-gradient(135deg,#c8efe8,#bfe4f5)"><svg viewBox="0 0 120 90" class="h-3/4" role="img" aria-label="${p.name}">${art[p.a]}</svg><img src="${p.img}" alt="${p.name}" loading="lazy" onerror="this.remove()" class="absolute inset-0 w-full h-full object-cover rounded-2xl"><span class="absolute z-10 left-3 top-3 rounded-full bg-white px-3 py-1 text-[11px] font-semibold" style="color:#0f2b29">${p.type}</span></div>
+    <div class="px-2 pt-4 pb-2"><h3 class="font-bold">${p.name}</h3><p class="text-xs muted mt-1">Stok tersedia: ${p.stock}</p>
+      <div class="flex items-center justify-between mt-4"><span class="text-lg font-extrabold text-brand">${rp(p.price)}</span><span class="bg-brand text-white rounded-full px-4 py-2 text-xs font-semibold inline-flex items-center gap-2"><i class="fa-brands fa-whatsapp"></i>Beli</span></div></div>
+  </a>`;
+}
+function btn(label, target, opts = {}) {
+  const base = 'min-w-9 h-9 px-3 rounded-full text-sm font-semibold grid place-items-center ';
+  if (opts.disabled) return `<span class="${base}muted opacity-40" aria-disabled="true">${label}</span>`;
+  const cls = opts.active ? 'bg-brand text-white' : 'card hover:shadow';
+  return `<button data-p="${target}" class="${base}${cls}" ${opts.active ? 'aria-current="page"' : ''} ${opts.aria ? `aria-label="${opts.aria}"` : ''}>${label}</button>`;
+}
+function render(scroll) {
+  const start = (page - 1) * PER, items = P.slice(start, start + PER);
+  grid.innerHTML = items.map(card).join('');
+  info.textContent = `Menampilkan ${start + 1}–${start + items.length} dari ${P.length} produk`;
+  let h = btn('<i class="fa-solid fa-chevron-left text-xs"></i>', page - 1, {disabled: page === 1, aria: 'Halaman sebelumnya'});
+  for (let i = 1; i <= pages; i++) h += btn(i, i, {active: i === page, aria: 'Halaman ' + i});
+  h += btn('<i class="fa-solid fa-chevron-right text-xs"></i>', page + 1, {disabled: page === pages, aria: 'Halaman berikutnya'});
+  pager.innerHTML = h;
+  try { history.replaceState(null, '', page === 1 ? location.pathname : '#hal-' + page); } catch (e) {}
+  if (scroll) window.scrollTo({top: 0, behavior: 'smooth'});
+}
+pager.onclick = e => { const b = e.target.closest('button[data-p]'); if (!b) return; page = +b.dataset.p; render(true); };
+render(false);
+
+// Menu & tema
+const mm = document.getElementById('mobileMenu');
+document.getElementById('menuBtn').onclick = () => mm.classList.toggle('hidden');
+themeBtn.onclick = () => {
+  const dark = document.documentElement.dataset.theme === 'dark';
+  document.documentElement.dataset.theme = dark ? 'light' : 'dark';
+  themeBtn.innerHTML = `<i class="fa-solid fa-${dark ? 'moon' : 'sun'}"></i>`;
+};
+</script>
+</body>
+</html>
