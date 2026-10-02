@@ -156,7 +156,37 @@
   <p class="muted text-sm mt-3 max-w-xl">Katalog obat-obatan dan alat pendukung. Klik produk untuk memesan lewat WhatsApp.</p>
   <div class="flex gap-1 text-xs rounded-full p-1 mt-6 w-fit" style="background:rgba(15,118,110,.08)">
     <button data-f="Semua" class="fBtn px-4 py-1.5 rounded-full bg-brand text-white">Semua</button><button data-f="Obat" class="fBtn px-4 py-1.5 rounded-full muted">Obat</button><button data-f="Alat" class="fBtn px-4 py-1.5 rounded-full muted">Alat</button></div>
-  <div id="prodList" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-6"></div>
+  @php $labelKategori = fn($k) => match($k) { 'obat' => 'Obat', 'alat_bantu' => 'Alat', 'perban' => 'Perban', default => ucfirst($k ?? '-') }; @endphp
+  @if($produk->count())
+    <div id="prodList" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-6">
+      @foreach($produk as $p)
+        @php
+          $tipe = $labelKategori($p->kategori);
+          $filterTipe = $p->kategori === 'obat' ? 'Obat' : 'Alat';
+          $img = $p->gambar ? asset('storage/' . $p->gambar) : 'https://picsum.photos/seed/mysehat-p' . $p->id . '/600/450';
+          $wa = 'https://wa.me/6287774487198?text=' . urlencode('Halo, saya mau membeli produk ' . $p->nama . '.');
+        @endphp
+        <a href="{{ $wa }}" target="_blank" rel="noopener" data-type="{{ $filterTipe }}" aria-label="Beli {{ $p->nama }} via WhatsApp" class="prodCard card rounded-3xl p-3 block hover:shadow-lg hover:-translate-y-0.5 transition">
+          <div class="relative aspect-[4/3] rounded-2xl grid place-items-center overflow-hidden" style="background:linear-gradient(135deg,#c8efe8,#bfe4f5)">
+            @if($p->kategori === 'obat')
+              <svg viewBox="0 0 120 90" class="h-3/4" role="img" aria-label="{{ $p->nama }}"><g transform="rotate(-30 60 45)"><rect x="22" y="32" width="76" height="26" rx="13" fill="#fff"/><path d="M60 32h25a13 13 0 010 26H60z" fill="#0f766e"/></g><circle cx="98" cy="70" r="6" fill="#5eead4"/></svg>
+            @else
+              <svg viewBox="0 0 120 90" class="h-3/4" role="img" aria-label="{{ $p->nama }}"><rect x="33" y="14" width="54" height="52" rx="12" fill="#fff"/><circle cx="60" cy="38" r="15" fill="#c8efe8" stroke="#0f766e" stroke-width="3"/><path d="M60 38l8-7" stroke="#0f766e" stroke-width="3" stroke-linecap="round"/><rect x="46" y="72" width="28" height="6" rx="3" fill="#0f766e"/></svg>
+            @endif
+            <img src="{{ $img }}" alt="{{ $p->nama }}" loading="lazy" onerror="this.remove()" class="absolute inset-0 w-full h-full object-cover rounded-2xl">
+            <span class="absolute z-10 left-3 top-3 rounded-full bg-white px-3 py-1 text-[11px] font-semibold" style="color:#0f2b29">{{ $tipe }}</span>
+          </div>
+          <div class="px-2 pt-4 pb-2"><h3 class="font-bold">{{ $p->nama }}</h3><p class="text-xs muted mt-1">Stok tersedia: {{ $p->stok }}</p>
+            <div class="flex items-center justify-between mt-4"><span class="text-lg font-extrabold text-brand">Rp{{ number_format($p->harga, 0, ',', '.') }}</span><span class="bg-brand text-white rounded-full px-4 py-2 text-xs font-semibold inline-flex items-center gap-2"><i class="fa-brands fa-whatsapp"></i>Beli</span></div></div>
+        </a>
+      @endforeach
+    </div>
+    <div class="mt-6">
+      <a href="{{ route('produk') }}" class="card rounded-full px-6 py-2.5 text-sm font-semibold inline-flex items-center gap-2 shadow-sm hover:shadow">Lihat semua produk <i class="fa-solid fa-arrow-right text-xs"></i></a>
+    </div>
+  @else
+    <div class="card rounded-3xl p-8 mt-6 text-center"><p class="font-bold">Belum ada produk tersedia</p></div>
+  @endif
 </section>
 
 <!-- GALERI -->
@@ -165,8 +195,22 @@
     <div><span class="card inline-block rounded-full px-4 py-1.5 text-xs font-medium">Galeri</span>
     <h2 class="text-3xl md:text-4xl font-bold tracking-tight mt-5">Galeri fasilitas rumah sakit</h2>
     <p class="muted text-sm mt-3 max-w-xl">Potret fasilitas dan kegiatan rumah sakit yang dikelola admin dari sistem.</p></div>
+    <a href="{{ route('galery') }}" class="card rounded-full px-6 py-2.5 text-sm font-semibold inline-flex items-center gap-2 shadow-sm hover:shadow shrink-0">Lihat semua <i class="fa-solid fa-arrow-right text-xs"></i></a>
   </div>
-  <div id="galGrid" class="grid grid-cols-2 md:grid-cols-3 gap-4 mt-8"></div>
+  @if($galery->count())
+    <div id="galGrid" class="grid grid-cols-2 md:grid-cols-3 gap-4 mt-8">
+      @foreach($galery as $g)
+        @php $gimg = $g->file_path ? asset('storage/' . $g->file_path) : 'https://picsum.photos/seed/mysehat-gal' . $g->id . '/800/600'; @endphp
+        <figure class="group relative aspect-[4/3] rounded-3xl overflow-hidden card">
+          <div class="w-full h-full grid place-items-center text-4xl" style="background:linear-gradient(135deg,#c8efe8,#bfe4f5);color:#0f766e"><i class="fa-solid fa-image"></i></div>
+          <img src="{{ $gimg }}" alt="{{ $g->nama }}" loading="lazy" onerror="this.remove()" class="absolute inset-0 w-full h-full object-cover">
+          <figcaption class="absolute z-10 left-3 bottom-3 rounded-full bg-white px-3 py-1 text-xs font-semibold shadow" style="color:#0f2b29">{{ $g->nama }}</figcaption>
+        </figure>
+      @endforeach
+    </div>
+  @else
+    <div class="card rounded-3xl p-8 mt-8 text-center"><p class="font-bold">Belum ada foto galeri</p></div>
+  @endif
 </section>
 
 <!-- KISAH PASIEN -->
@@ -274,54 +318,14 @@ const io = new IntersectionObserver(es => es.forEach(e => {
 }), { threshold: .6 });
 document.querySelectorAll('.stat').forEach(el => io.observe(el));
 
-// Katalog produk (dummy template beranda)
-const WA = '6287774487198';
-const art = {
-  capsule: '<g transform="rotate(-30 60 45)"><rect x="22" y="32" width="76" height="26" rx="13" fill="#fff"/><path d="M60 32h25a13 13 0 010 26H60z" fill="#0f766e"/></g><circle cx="98" cy="70" r="6" fill="#5eead4"/>',
-  tablet: '<rect x="20" y="18" width="80" height="54" rx="8" fill="#fff"/><g fill="#5eead4"><circle cx="38" cy="36" r="7"/><circle cx="60" cy="36" r="7"/><circle cx="82" cy="36" r="7"/><circle cx="38" cy="55" r="7"/><circle cx="60" cy="55" r="7"/><circle cx="82" cy="55" r="7"/></g>',
-  pen: '<rect x="14" y="37" width="66" height="18" rx="7" fill="#fff"/><rect x="24" y="42" width="32" height="8" rx="3" fill="#5eead4"/><rect x="80" y="41" width="14" height="10" fill="#0f766e"/><path d="M94 46h16" stroke="#0f766e" stroke-width="2.5" stroke-linecap="round"/>',
-  bp: '<rect x="33" y="14" width="54" height="52" rx="12" fill="#fff"/><circle cx="60" cy="38" r="15" fill="#c8efe8" stroke="#0f766e" stroke-width="3"/><path d="M60 38l8-7" stroke="#0f766e" stroke-width="3" stroke-linecap="round"/><rect x="46" y="72" width="28" height="6" rx="3" fill="#0f766e"/>',
-  chair: '<circle cx="48" cy="58" r="19" fill="none" stroke="#fff" stroke-width="5"/><circle cx="48" cy="58" r="3" fill="#fff"/><path d="M48 58V22h11M48 40h30l9 18" fill="none" stroke="#0f766e" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="92" cy="66" r="6" fill="#0f766e"/>',
-  tank: '<rect x="42" y="24" width="36" height="56" rx="16" fill="#fff"/><rect x="42" y="44" width="36" height="14" fill="#5eead4"/><rect x="53" y="12" width="14" height="14" rx="3" fill="#0f766e"/><path d="M67 17h14" stroke="#0f766e" stroke-width="4" stroke-linecap="round"/>'
-};
-const P = [
-  {name:'Amoxicillin 500 mg',type:'Obat',stock:120,price:45000,art:'capsule',img:'https://picsum.photos/seed/mysehat-capsule/600/450'},
-  {name:'Paracetamol 500 mg',type:'Obat',stock:300,price:15000,art:'tablet',img:'https://picsum.photos/seed/mysehat-tablet/600/450'},
-  {name:'Insulin Pen',type:'Obat',stock:45,price:185000,art:'pen',img:'https://picsum.photos/seed/mysehat-pen/600/450'},
-  {name:'Tensimeter Digital',type:'Alat',stock:14,price:350000,art:'bp',img:'https://picsum.photos/seed/mysehat-bp/600/450'},
-  {name:'Kursi Roda',type:'Alat',stock:8,price:1250000,art:'chair',img:'https://picsum.photos/seed/mysehat-chair/600/450'},
-  {name:'Tabung Oksigen',type:'Alat',stock:20,price:650000,art:'tank',img:'https://picsum.photos/seed/mysehat-tank/600/450'}
-];
-const rp = n => 'Rp' + n.toLocaleString('id-ID');
-let filt = 'Semua';
-const prodList = document.getElementById('prodList');
-function renderProd() {
-  if (!prodList) return;
-  prodList.innerHTML = P.filter(p => filt === 'Semua' || p.type === filt).map(p => {
-    const url = `https://wa.me/${WA}?text=${encodeURIComponent('Halo, saya mau membeli produk ' + p.name + '.')}`;
-    return `<a href="${url}" target="_blank" rel="noopener" aria-label="Beli ${p.name} via WhatsApp" class="card rounded-3xl p-3 block hover:shadow-lg hover:-translate-y-0.5 transition">
-      <div class="relative aspect-[4/3] rounded-2xl grid place-items-center" style="background:linear-gradient(135deg,#c8efe8,#bfe4f5)"><svg viewBox="0 0 120 90" class="h-3/4" role="img" aria-label="${p.name}">${art[p.art]}</svg><img src="${p.img}" alt="${p.name}" loading="lazy" onerror="this.remove()" class="absolute inset-0 w-full h-full object-cover rounded-2xl"><span class="absolute z-10 left-3 top-3 rounded-full bg-white px-3 py-1 text-[11px] font-semibold" style="color:#0f2b29">${p.type}</span></div>
-      <div class="px-2 pt-4 pb-2"><h3 class="font-bold">${p.name}</h3><p class="text-xs muted mt-1">Stok tersedia: ${p.stock}</p>
-        <div class="flex items-center justify-between mt-4"><span class="text-lg font-extrabold text-brand">${rp(p.price)}</span><span class="bg-brand text-white rounded-full px-4 py-2 text-xs font-semibold inline-flex items-center gap-2"><i class="fa-brands fa-whatsapp"></i>Beli</span></div></div>
-    </a>`;
-  }).join('');
-}
+// Filter produk beranda (client-side, data sudah dinamis dari DB)
 document.querySelectorAll('.fBtn').forEach(b => b.onclick = () => {
-  filt = b.dataset.f;
+  const f = b.dataset.f;
   document.querySelectorAll('.fBtn').forEach(x => { const on = x === b; x.classList.toggle('bg-brand', on); x.classList.toggle('text-white', on); x.classList.toggle('muted', !on); });
-  renderProd();
+  document.querySelectorAll('.prodCard').forEach(c => {
+    c.style.display = (f === 'Semua' || c.dataset.type === f) ? '' : 'none';
+  });
 });
-renderProd();
-
-// Galeri (dummy template beranda)
-const gradG = ['#c8efe8,#bfe4f5','#d9f5f0,#e3e0fb','#bfe4f5,#d2f0ec','#f8e6d2,#c8efe8','#a9dceb,#d9f5f0','#d2f0ec,#8fd8cf'];
-let G = [['Ruang Rawat Inap','fa-bed-pulse'],['Poli Anak','fa-baby'],['Laboratorium','fa-flask-vial'],['IGD','fa-truck-medical'],['Farmasi','fa-pills'],['Taman Pemulihan','fa-tree']].map(([cap, icon], i) => ({cap, icon, img:'https://picsum.photos/seed/mysehat-gal'+(i+1)+'/800/600'}));
-const galGrid = document.getElementById('galGrid');
-function renderGal() {
-  if (!galGrid) return;
-  galGrid.innerHTML = G.map((g, i) => `<figure class="group relative aspect-[4/3] rounded-3xl overflow-hidden card"><div class="w-full h-full grid place-items-center text-4xl" style="background:linear-gradient(135deg,${gradG[i % 6]});color:#0f766e"><i class="fa-solid ${g.icon}"></i></div>${g.img ? `<img src="${g.img}" alt="${g.cap}" loading="lazy" onerror="this.remove()" class="absolute inset-0 w-full h-full object-cover">` : ''}<figcaption class="absolute z-10 left-3 bottom-3 rounded-full bg-white px-3 py-1 text-xs font-semibold shadow" style="color:#0f2b29">${g.cap}</figcaption></figure>`).join('');
-}
-renderGal();
 
 // Form demo
 const sendBtn = document.getElementById('sendBtn');

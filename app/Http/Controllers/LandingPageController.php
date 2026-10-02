@@ -9,7 +9,9 @@ use Illuminate\Http\Request;
 class LandingPageController extends Controller
 {
     public function indexHome() {
-        return view('pages.home');
+        $produk = Produk::where('status', 'active')->orderBy('created_at', 'desc')->take(6)->get();
+        $galery = Galery::where('status', 'active')->orderBy('created_at', 'desc')->take(6)->get();
+        return view('pages.home', compact('produk', 'galery'));
     }
     public function indexProduk() {
         $produk = Produk::where('status', 'active')->orderBy('created_at', 'desc')->paginate(8);
